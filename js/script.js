@@ -1,22 +1,16 @@
-/*  atteint le catalogue sur url API  */
-fetch("http://localhost:3000/api/products")
-  .then(function (res) {
-    return res.json();
-  })
-  .then(function (data) {
-    return displayProducts(data);
-  })
-  .catch(function (error) {
-    alert(error);
-  });
-
 //  récupère les données du catalogue sur url API
+fetch("http://localhost:3000/api/products")
+  .then((res) => res.json())
+  .then((data) => displayProducts(data))
+  .catch((error) => alert(error));
+
+//  construit un objet à partir des éléments récupérés dans le tableau
 function displayProducts(data) {
   for (let element of data) {
     makeArticles(element);
   }
 }
-// affiche les produits sur la page d'accueil index.html
+// affiche l'objet sur la page d'accueil index.html
 function makeArticles(sofa) {
   const article = `
     <a href="./product.html?id=${sofa._id}">
