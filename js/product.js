@@ -1,6 +1,5 @@
 // récupère l'id du produit sur le quel on a cliqué
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
+const urlParams = new URL(document.location).searchParams;
 const idProduct = urlParams.get("id");
 
 // ajoute l'id récupéré au bout de l'url
@@ -26,3 +25,12 @@ function makeArticle(sofa) {
     document.querySelector("#colors").appendChild(option);
   }
 }
+// save le panier dans localstorage
+const button = document.querySelector("#addToCart");
+button.addEventListener("click", () => {
+  const color = document.querySelector("#colors").value;
+  const quantity = document.querySelector("#quantity").value;
+  let price = document.querySelector("#price").value;
+  JSON.stringify(price);
+  console.log(idProduct, color, quantity, JSON.stringify(price));
+});
