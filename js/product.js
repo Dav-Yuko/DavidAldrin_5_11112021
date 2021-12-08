@@ -16,6 +16,7 @@ function makeArticle(sofa) {
   document.querySelector("#title").textContent = sofa.name;
   document.querySelector("#price").textContent = sofa.price;
   document.querySelector("#description").textContent = sofa.description;
+  document.getElementById("quantity").setAttribute("value", 1);
 
   //  fait une boucle pour parcourir les couleurs et les affiche dans la valeur et dans le texte de la liste déroulante
   for (let color of sofa.colors) {
@@ -28,9 +29,16 @@ function makeArticle(sofa) {
 // save le panier dans localstorage
 const button = document.querySelector("#addToCart");
 button.addEventListener("click", () => {
-  const color = document.querySelector("#colors").value;
-  const quantity = document.querySelector("#quantity").value;
-  let price = document.querySelector("#price").value;
-  JSON.stringify(price);
-  console.log(idProduct, color, quantity, JSON.stringify(price));
+  const color = document.querySelector("#colors")?.value;
+  const quantity = Number(document.querySelector("#quantity")?.value);
+  const price = Number(document.querySelector("#price")?.textContent);
+  const key = `${idProduct}${color}`;
+  const payLoad = {
+    idProduct,
+    color,
+    price,
+    quantity,
+  };
+
+  localStorage.setItem(key, JSON.stringify(payLoad));
 });
