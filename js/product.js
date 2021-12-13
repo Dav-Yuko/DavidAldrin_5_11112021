@@ -18,6 +18,13 @@ function makeArticle(sofa) {
   document.querySelector("#description").textContent = sofa.description;
   document.getElementById("quantity").setAttribute("value", 1);
 
+  // on s'assure qu'une valeur est entrée
+  if (sofa.colors != null && sofa.colors.length > 0) {
+    const defaultColor = document.querySelector(
+      "#colors > option:nth-child(1)"
+    );
+    defaultColor.remove();
+  }
   //  fait une boucle pour parcourir les couleurs et les affiche dans la valeur et dans le texte de la liste déroulante
   for (let color of sofa.colors) {
     const option = document.createElement("option");
