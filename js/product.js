@@ -12,7 +12,7 @@ fetch(`http://localhost:3000/api/products/${idProduct}`)
 function makeArticle(sofa) {
   document.querySelector(
     ".item__img"
-  ).innerHTML = `<img src="${sofa.imageUrl}">`;
+  ).innerHTML = `<img src="${sofa.imageUrl}" alt="${sofa.altTxt}">`;
   document.querySelector("#title").textContent = sofa.name;
   document.querySelector("#price").textContent = sofa.price;
   document.querySelector("#description").textContent = sofa.description;
@@ -32,20 +32,25 @@ function makeArticle(sofa) {
     option.textContent = color;
     document.querySelector("#colors").appendChild(option);
   }
-}
-// save le panier dans localstorage
-const button = document.querySelector("#addToCart");
-button.addEventListener("click", () => {
-  const color = document.querySelector("#colors")?.value;
-  const quantity = Number(document.querySelector("#quantity")?.value);
-  const price = Number(document.querySelector("#price")?.textContent);
-  const key = `${idProduct}${color}`;
-  const payLoad = {
-    idProduct,
-    color,
-    price,
-    quantity,
-  };
 
-  localStorage.setItem(key, JSON.stringify(payLoad));
-});
+  // save le panier dans localstorage
+  const button = document.querySelector("#addToCart");
+  button.addEventListener("click", () => {
+    const color = document.querySelector("#colors")?.value;
+    const quantity = Number(document.querySelector("#quantity")?.value);
+    const price = Number(document.querySelector("#price")?.textContent);
+    const key = `${idProduct}${color}`;
+    const image = sofa.imageUrl;
+    const altImage = sofa.altTxt;
+    const payLoad = {
+      idProduct,
+      color,
+      price,
+      quantity,
+      image,
+      altImage,
+    };
+
+    localStorage.setItem(key, JSON.stringify(payLoad));
+  });
+}
