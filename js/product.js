@@ -36,14 +36,16 @@ function makeArticle(sofa) {
   // save le panier dans localstorage
   const button = document.querySelector("#addToCart");
   button.addEventListener("click", () => {
+    const name = sofa.name;
     const color = document.querySelector("#colors")?.value;
     const quantity = Number(document.querySelector("#quantity")?.value);
-    const price = Number(document.querySelector("#price")?.textContent);
+    const price = Number(sofa.price);
     const key = `${idProduct}${color}`;
     const image = sofa.imageUrl;
     const altImage = sofa.altTxt;
     const payLoad = {
       idProduct,
+      name,
       color,
       price,
       quantity,
