@@ -40,7 +40,7 @@ function makeArticle(sofa) {
     const color = document.querySelector("#colors")?.value;
     const quantity = Number(document.querySelector("#quantity")?.value);
     const price = Number(sofa.price);
-    const key = `${idProduct}${color}`;
+    const key = `${idProduct}:${color}`;
     const image = sofa.imageUrl;
     const altImage = sofa.altTxt;
     const payLoad = {
