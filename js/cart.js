@@ -1,9 +1,12 @@
+const cart = [];
+
 reachDataStorage();
 
 function reachDataStorage() {
   for (let i = 0; i < localStorage.length; ++i) {
     const item = localStorage.getItem(localStorage.key(i));
     const itemParse = JSON.parse(item);
+    cart.push(itemParse);
     displayArticle(itemParse);
   }
 }
@@ -41,7 +44,23 @@ function displayArticle(sofa) {
   </div>
 </article>`;
   document.getElementById("cart__items").innerHTML += article;
-  const totalItemPrice = sofa.price * sofa.quantity;
-  for each
-  document.getElementById("totalPrice").textContent += Number(totalItemPrice);
+  makeTotalQuantity(sofa);
+  makeTotalPrice(sofa);
+}
+function makeTotalQuantity(sofas) {
+  const totalQuantityByItem = cart.reduce(
+    (totalQuantityByItem, sofas) => totalQuantityByItem + sofas.quantity,
+    0
+  );
+  document.querySelector("#totalQuantity").textContent = totalQuantityByItem;
+}
+
+function makeTotalPrice(sofas) {
+  const totalPriceByItem = cart.reduce(
+    (totalPriceByItem, sofas) =>
+      totalPriceByItem + sofas.price * sofas.quantity,
+    0
+  );
+  document.querySelector("#totalPrice").textContent =
+    totalPriceByItem.toLocaleString("de");
 }
