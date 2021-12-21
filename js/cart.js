@@ -1,7 +1,6 @@
 const cart = [];
 
-reachDataStorage();
-
+// RECUPERE LES DONNEES DU DATA STORAGE VIA UNE BOUCLE ET APPELLE LA FONCTION POUR LES AFFICHER
 function reachDataStorage() {
   for (let i = 0; i < localStorage.length; ++i) {
     const item = localStorage.getItem(localStorage.key(i));
@@ -10,6 +9,7 @@ function reachDataStorage() {
     displayArticle(itemParse);
   }
 }
+reachDataStorage();
 
 // altImage: "Photo d'un canapé bleu, deux places"
 // color: "Blue"
@@ -19,7 +19,15 @@ function reachDataStorage() {
 // price: 1849
 // quantity: 1
 
-// affiche l'objet sur la page d'accueil index.html
+// CACHE LE FORMULAIRE SI PANIER VIDE
+hideForm = () => {
+  if (cart.length == 0) {
+    document.querySelector(".cart__order").style.visibility = "hidden";
+  }
+};
+hideForm();
+
+// AFFICHE LES OBJETS SUR LA PAGE PANIER
 function displayArticle(sofa) {
   const article = `
   <article class="cart__item" data-id=${sofa.idProduct} data-color=${sofa.color}>
@@ -44,23 +52,35 @@ function displayArticle(sofa) {
   </div>
 </article>`;
   document.getElementById("cart__items").innerHTML += article;
-  makeTotalQuantity(sofa);
-  makeTotalPrice(sofa);
-}
-function makeTotalQuantity(sofas) {
-  const totalQuantityByItem = cart.reduce(
-    (totalQuantityByItem, sofas) => totalQuantityByItem + sofas.quantity,
-    0
-  );
-  document.querySelector("#totalQuantity").textContent = totalQuantityByItem;
+  makeTotalQuantity();
+  makeTotalPrice();
+  document
+    .querySelector(".itemQuantity")
+    .addEventListener("click", () => updateQuantity(sofa.idProduct));
 }
 
-function makeTotalPrice(sofas) {
-  const totalPriceByItem = cart.reduce(
-    (totalPriceByItem, sofas) =>
-      totalPriceByItem + sofas.price * sofas.quantity,
-    0
-  );
+// CALCULE ET AFFICHE LA QUANTITE TOTALE DANS LE PANIER
+function makeTotalQuantity() {
+  let totalQuantity = 0;
+  cart.forEach((sofa) => {
+    totalQuantity += sofa.quantity;
+  });
+  document.querySelector("#totalQuantity").textContent = totalQuantity;
+}
+
+// PASSE LA NOUVELLE VALEUR QUANTITE SUR LE PANIER
+function updateQuantity(idProduct) {
+  newQuantity = document.querySelector(".itemQuantity").value;
+  console.log(idProduct, newQuantity);
+}
+
+// CALCULE ET AFFICHE LE PRIX TOTAL DU PANIER
+function makeTotalPrice() {
+  let totalPrice = 0;
+  cart.forEach((sofa) => {
+    totalPriceByItem = sofa.price * sofa.quantity;
+    totalPrice += totalPriceByItem;
+  });
   document.querySelector("#totalPrice").textContent =
-    totalPriceByItem.toLocaleString("de");
+    totalPrice.toLocaleString("de");
 }
