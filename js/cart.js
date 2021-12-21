@@ -1,6 +1,6 @@
 const cart = [];
 
-// RECUPERE LES DONNEES DU DATA STORAGE VIA UNE BOUCLE ET APPELLE LA FONCTION POUR LES AFFICHER
+// RECUPERE LES OBJETS DU DATA STORAGE VIA UNE BOUCLE ET APPELLE LA FONCTION POUR LES AFFICHER
 function reachDataStorage() {
   for (let i = 0; i < localStorage.length; ++i) {
     const item = localStorage.getItem(localStorage.key(i));
@@ -19,41 +19,34 @@ reachDataStorage();
 // price: 1849
 // quantity: 1
 
-// CACHE LE FORMULAIRE SI PANIER VIDE
-hideForm = () => {
-  if (cart.length == 0) {
-    document.querySelector(".cart__order").style.visibility = "hidden";
-  }
-};
-hideForm();
-
 // AFFICHE LES OBJETS SUR LA PAGE PANIER
 function displayArticle(sofa) {
   const article = `
   <article class="cart__item" data-id=${sofa.idProduct} data-color=${sofa.color}>
-  <div class="cart__item__img">
-    <img src=${sofa.image} alt="${sofa.altImage}">
-  </div>
-  <div class="cart__item__content">
-    <div class="cart__item__content__description">
-      <h2>${sofa.name}</h2>
-      <p>${sofa.color}</p>
-      <p>${sofa.price}</p>
+    <div class="cart__item__img">
+      <img src=${sofa.image} alt="${sofa.altImage}">
     </div>
-    <div class="cart__item__content__settings">
-      <div class="cart__item__content__settings__quantity">
-        <p>Qté : </p>
-        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${sofa.quantity}>
+    <div class="cart__item__content">
+     <div class="cart__item__content__description">
+        <h2>${sofa.name}</h2>
+        <p>${sofa.color}</p>
+        <p>${sofa.price}</p>
       </div>
-      <div class="cart__item__content__settings__delete">
-        <p class="deleteItem">Supprimer</p>
+      <div class="cart__item__content__settings">
+        <div class="cart__item__content__settings__quantity">
+          <p>Qté : </p>
+          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${sofa.quantity}>
+        </div>
+        <div class="cart__item__content__settings__delete">
+          <p class="deleteItem">Supprimer</p>
+        </div>
       </div>
     </div>
-  </div>
-</article>`;
+  </article>`;
   document.getElementById("cart__items").innerHTML += article;
-  makeTotalQuantity();
-  makeTotalPrice();
+  makeTotalQuantity(); //APELLE LA FONCTION POUR CALCULER LE PRIX TOTAL PANIER
+  makeTotalPrice(); //APELLE A FONCTION POUR CALCULER LES PRIX PANIER
+
   document
     .querySelector(".itemQuantity")
     .addEventListener("click", () => updateQuantity(sofa.idProduct));
@@ -74,13 +67,21 @@ function updateQuantity(idProduct) {
   console.log(idProduct, newQuantity);
 }
 
-// CALCULE ET AFFICHE LE PRIX TOTAL DU PANIER
+// CALCULE LE PRIX TOTAL PAR TYPE D'ARTICLE PUIS ADDITIONNE ET AFFICHE LE PRIX TOTAL DU PANIER
 function makeTotalPrice() {
   let totalPrice = 0;
   cart.forEach((sofa) => {
-    totalPriceByItem = sofa.price * sofa.quantity;
-    totalPrice += totalPriceByItem;
+    totalPriceByArticle = sofa.price * sofa.quantity;
+    totalPrice += totalPriceByArticle;
   });
   document.querySelector("#totalPrice").textContent =
     totalPrice.toLocaleString("de");
 }
+
+// CACHE LE FORMULAIRE SI PANIER VIDE
+hideForm = () => {
+  if (cart.length == 0) {
+    document.querySelector(".cart__order").style.visibility = "hidden";
+  }
+};
+hideForm();
