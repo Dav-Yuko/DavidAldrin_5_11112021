@@ -131,7 +131,7 @@ function deleteItem(item) {
   updateTotal(cart);
 }
 function deleteDataFromCache(item) {
-  const key = `${item.idProduct}${item.color}`;
+  const key = `${item.idProduct}/${item.color}`;
   localStorage.removeItem(key);
 }
 
@@ -185,10 +185,49 @@ function mapPriceToString(str) {
   });
 }
 
-// CACHE LE FORMULAIRE SI PANIER VIDE
-const hideForm = () => {
-  if (cart.length == 0) {
-    document.querySelector(".cart__order").style.visibility = "hidden";
-  }
-};
-hideForm();
+//////////////////////////////////////////////////////////
+
+const orderButton = document.querySelector("#order");
+orderButton.addEventListener("click", (e) => submitForm(e));
+
+function submitForm(e) {
+  e.preventDefault();
+  if (cart.length === 0) alert("merci de sélectionner un produit");
+
+  const bodyDatasUser = makeRequestBody();
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify(bodyDatasUser),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data));
+}
+//Construction d'un array depuis le local storage
+const idProducts = [];
+for (let i = 0; i < cart.length; i++) {
+  idProducts.push(cart[i].idProduct);
+}
+
+function makeRequestBody() {
+  const form = document.querySelector(".cart__order__form");
+  const firstName = form.elements.firstName.value;
+  const lastName = form.elements.lastName.value;
+  const address = form.elements.address.value;
+  const city = form.elements.city.value;
+  const email = form.elements.email.value;
+
+  const bodyDatasUser = {
+    contact: {
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      city: city,
+      email: email,
+    },
+    products: idProducts,
+  };
+  return bodyDatasUser;
+}
