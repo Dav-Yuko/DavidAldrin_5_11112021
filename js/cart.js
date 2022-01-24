@@ -297,10 +297,10 @@ for (let i = 0; i < cart.length; i++) {
 
 // ENVOIE LE CONTENU DU PANIER ET LES DATA USER AU BACKEND
 function postOrder() {
-  const bodyDatasUser = makeRequestBody();
+  const dataUserAndProducts = setForm();
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
-    body: JSON.stringify(bodyDatasUser),
+    body: JSON.stringify(dataUserAndProducts),
     headers: {
       "Content-Type": "application/json",
     },
@@ -314,8 +314,8 @@ function postOrder() {
     .catch((err) => console.log(err));
 }
 
-// CONSTRUIT L'OBJET CONTACT ET PRODUCTS
-function makeRequestBody() {
+// CONSTRUIT LE FORMULAIRE, L'OBJET CONTACT ET PRODUCTS
+function setForm() {
   const form = document.querySelector(".cart__order__form");
   const firstName = form.elements.firstName.value;
   const lastName = form.elements.lastName.value;
@@ -323,7 +323,7 @@ function makeRequestBody() {
   const city = form.elements.city.value;
   const email = form.elements.email.value;
 
-  const bodyDatasUser = {
+  const dataUserAndProducts = {
     contact: {
       firstName: firstName,
       lastName: lastName,
@@ -333,7 +333,7 @@ function makeRequestBody() {
     },
     products: idProducts,
   };
-  return bodyDatasUser;
+  return dataUserAndProducts;
 }
 
 // REGEX POUR CONTROLE LES INPUTS FORMULAIRE ET MESSAGES ERROR
