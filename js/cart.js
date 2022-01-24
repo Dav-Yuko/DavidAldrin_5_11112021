@@ -20,6 +20,7 @@ function getCartFromCache() {
   }
 }
 
+// AFFICHE L'ITEM GLOBAL
 function displayItem(item) {
   const article = setArticle(item);
   displayArticle(article);
@@ -40,7 +41,6 @@ function setArticle(item) {
 function setImage(item) {
   const divImage = document.createElement("div");
   divImage.classList.add("cart__item__img");
-
   const image = document.createElement("img");
   image.src = item.imageUrl;
   image.alt = item.altImage;
@@ -48,6 +48,7 @@ function setImage(item) {
   return divImage;
 }
 
+// AFFICHE LE CONTENU D'UN ITEM
 function setCartItemContent(item) {
   const divItemContent = document.createElement("div");
   divItemContent.classList.add("cart__item__content");
@@ -58,6 +59,7 @@ function setCartItemContent(item) {
   return divItemContent;
 }
 
+// INTEGRE LA DESCRIPTION DE L'ITEM
 function setItemDescription(item) {
   const itemDescription = document.createElement("div");
   itemDescription.classList.add("cart__item__content__description");
@@ -73,6 +75,7 @@ function setItemDescription(item) {
   return itemDescription;
 }
 
+// INTEGRE LA DIV SETTING QUANTITE ET SUPPRIME DEL'ITEM
 function setItemSettings(item) {
   const itemSetting = document.createElement("div");
   itemSetting.classList.add("cart__item__content__settings");
@@ -80,10 +83,10 @@ function setItemSettings(item) {
   itemSetting.appendChild(itemQuantity);
   const itemDelete = setItemDelete(item);
   itemSetting.appendChild(itemDelete);
-
   return itemSetting;
 }
 
+// INTEGRE UN INPUT QUANTITE SUR UN ITEM
 function setItemQuantity(item) {
   const itemQuantity = document.createElement("div");
   itemQuantity.classList.add("cart__item__content__settings__quantity");
@@ -99,7 +102,7 @@ function setItemQuantity(item) {
   input.value = item.quantity;
   itemQuantity.appendChild(input);
 
-  //LISTENER SUR INPUT DE LA QUANTITE
+  //ECOUTE INPUT DE LA QUANTITE
   input.addEventListener("change", (event) => {
     updateQuantity(item, event.target.value);
     updateTotal(cart);
@@ -107,21 +110,24 @@ function setItemQuantity(item) {
   return itemQuantity;
 }
 
+//CREE LE BOUTON SUPPRIMER
 function setItemDelete(item) {
   const divItemDelete = document.createElement("div");
   divItemDelete.classList.add("cart__item__content__settings__delete");
   const p = document.createElement("p");
-  p.classList.add("deleteItem");
+  p.classList.add("getItemToDelete");
   p.textContent = "Supprimer";
   divItemDelete.appendChild(p);
 
-  //LISTENER SUR DIV SUPPRIMER
+  //ECOUTE ACTION SUR SUR DIV SUPPRIMER
   divItemDelete.addEventListener("click", () => {
-    deleteItem(item);
+    getItemToDelete(item);
   });
   return divItemDelete;
 }
-function deleteItem(item) {
+
+// IDENTIFIE L'ITEM A SUPPRIMER
+function getItemToDelete(item) {
   const itemToDelete = cart.findIndex(
     (product) => product.id === item.idProduct && product.color === item.color
   );
@@ -130,11 +136,14 @@ function deleteItem(item) {
   deleteArticleFromCart(item);
   updateTotal(cart);
 }
+
+// SUPPRIME L'ARTICLE DU LOCALSTORAE
 function deleteDataFromCache(item) {
   const key = `${item.idProduct}/${item.color}`;
   localStorage.removeItem(key);
 }
 
+// SUPPRIME L'ARTICLE SU PANIER
 function deleteArticleFromCart(item) {
   const articleToDelete = document.querySelector(
     `article[data-id="${item.idProduct}"][data-color="${item.color}"]`
@@ -142,6 +151,7 @@ function deleteArticleFromCart(item) {
   articleToDelete.remove();
 }
 
+// AFFICHE UN ARTICLE
 function displayArticle(article) {
   document.querySelector("#cart__items").appendChild(article);
 }
@@ -196,15 +206,96 @@ function submitForm(e) {
     alert("merci de sélectionner un produit");
     return;
   }
-  if (checkInputEmail()) return;
   if (checkInputFirstName()) return;
   if (checkInputLastName()) return;
   if (checkInputAddress()) return;
   if (checkInputCity()) return;
+  if (checkInputEmail()) return;
   postOrder();
 }
 
-// ENVOIE LE PANIER ET LES DATA USER AU BACKEND
+// VERIFIE SI INPUT FIRSTNAME EST NON VIDE ET CORRECT
+function checkInputFirstName() {
+  const firstName = document.querySelector("#firstName");
+  if (firstName.value === "") {
+    firstNameErrorMsg.textContent = errorEmptyField;
+    return;
+  }
+  if (stringRegex.test(firstName.value)) {
+    firstNameErrorMsg.textContent = "";
+  } else {
+    firstNameErrorMsg.textContent = errorInputField;
+    return true;
+  }
+}
+
+// VERIFIE SI INPUT LASTNAME EST NON VIDE ET CORRECT
+function checkInputLastName() {
+  const lastName = document.querySelector("#lastName");
+  if (lastName.value === "") {
+    lastNameErrorMsg.textContent = errorEmptyField;
+    return;
+  }
+  if (stringRegex.test(lastName.value)) {
+    lastNameErrorMsg.textContent = "";
+  } else {
+    lastNameErrorMsg.textContent = errorInputField;
+    return true;
+  }
+}
+
+// VERIFIE SI INPUT ADDRESS EST NON VIDE ET CORRECT
+function checkInputAddress() {
+  const address = document.querySelector("#address");
+  if (address.value === "") {
+    addressErrorMsg.textContent = errorEmptyField;
+    return;
+  }
+  if (addressRegex.test(address.value)) {
+    addressErrorMsg.textContent = "";
+  } else {
+    addressErrorMsg.textContent = errorInputField;
+    return true;
+  }
+}
+
+// VERIFIE SI INPUT CITY EST NON VIDE ET CORRECT
+function checkInputCity() {
+  const city = document.querySelector("#city");
+  if (city.value === "") {
+    cityErrorMsg.textContent = errorEmptyField;
+    return;
+  }
+  if (stringRegex.test(city.value)) {
+    cityErrorMsg.textContent = "";
+  } else {
+    cityErrorMsg.textContent = errorInputField;
+    return true;
+  }
+}
+
+// VERIFIE SI INPUT EMAIL EST NON VIDE ET CORRECT
+function checkInputEmail() {
+  const email = document.querySelector("#email");
+  if (email.value === "") {
+    emailErrorMsg.textContent = errorEmptyField;
+    return true;
+  }
+  if (emailRegex.test(email.value)) {
+    emailErrorMsg.textContent = "";
+  } else {
+    emailErrorMsg.textContent = errorInputField;
+    return true;
+  }
+}
+
+//VA CHERCHER LE ID DE CHAQUE ITEMS DANS LE LOCALSTORAGE ET LES PLACE DANS UN ARRAY
+const idProducts = [];
+for (let i = 0; i < cart.length; i++) {
+  idProducts.push(cart[i].idProduct);
+}
+
+// ENVOIE LE CONTENU DU PANIER ET LES DATA USER AU BACKEND
 function postOrder() {
   const bodyDatasUser = makeRequestBody();
   fetch("http://localhost:3000/api/products/order", {
@@ -215,88 +306,12 @@ function postOrder() {
     },
   })
     .then((res) => res.json())
-    .then((data) => console.log(data));
-}
-
-// VERIFIE SI INPUT FIRSTNAME EST NON VIDE ET CORRECT
-function checkInputFirstName() {
-  const firstName = document.querySelector("#firstName");
-  if (firstName.value === "") {
-    firstNameErrorMsg.textContent = errorEmptyFields;
-    return;
-  }
-  if (stringRegex.test(firstName.value)) {
-    firstNameErrorMsg.textContent = "";
-  } else {
-    firstNameErrorMsg.textContent = errorInputFiels;
-    return true;
-  }
-}
-
-// VERIFIE SI INPUT LASTNAME EST NON VIDE ET CORRECT
-function checkInputLastName() {
-  const lastName = document.querySelector("#lastName");
-  if (lastName.value === "") {
-    lastNameErrorMsg.innerHTML = errorEmptyFields;
-    return;
-  }
-  if (stringRegex.test(lastName.value)) {
-    lastNameErrorMsg.innerHTML = "";
-  } else {
-    lastNameErrorMsg.innerHTML = errorInputFiels;
-    return true;
-  }
-}
-
-// VERIFIE SI INPUT ADDRESS EST NON VIDE ET CORRECT
-function checkInputAddress() {
-  const address = document.querySelector("#address");
-  if (address.value === "") {
-    addressErrorMsg.innerHTML = errorEmptyFields;
-    return;
-  }
-  if (addressRegex.test(address.value)) {
-    addressErrorMsg.innerHTML = "";
-  } else {
-    addressErrorMsg.innerHTML = errorInputFiels;
-    return true;
-  }
-}
-
-// VERIFIE SI INPUT CITY EST NON VIDE ET CORRECT
-function checkInputCity() {
-  const city = document.querySelector("#city");
-  if (city.value === "") {
-    cityErrorMsg.innerHTML = errorEmptyFields;
-    return;
-  }
-  if (stringRegex.test(city.value)) {
-    cityErrorMsg.innerHTML = "";
-  } else {
-    cityErrorMsg.innerHTML = errorInputFiels;
-    return true;
-  }
-}
-
-// VERIFIE SI INPUT EMAIL EST NON VIDE ET CORRECT
-function checkInputEmail() {
-  const email = document.querySelector("#email");
-  if (email.value === "") {
-    emailErrorMsg.innerHTML = errorEmptyFields;
-    return;
-  }
-  if (emailRegex.test(email.value)) {
-    emailErrorMsg.innerHTML = "";
-  } else {
-    emailErrorMsg.innerHTML = errorInputFiels;
-    return true;
-  }
-}
-
-//VA CHERCHER LE ID DE CHAQUE ITEMS DANS LE LOCALSTORAGE ET LES PLACE DANS UN ARRAY
-const idProducts = [];
-for (let i = 0; i < cart.length; i++) {
-  idProducts.push(cart[i].idProduct);
+    .then((data) => {
+      const orderId = data.orderId;
+      window.location.href = "/html/confirmation.html?orderId=" + orderId;
+      return console.log(orderId);
+    })
+    .catch((err) => console.log(err));
 }
 
 // CONSTRUIT L'OBJET CONTACT ET PRODUCTS
@@ -325,5 +340,5 @@ function makeRequestBody() {
 const emailRegex = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
 const stringRegex = /^[a-zA-Z,.'-]+$/;
 const addressRegex = /^[0-9]{1,3}(?:(?:[,. ]){1,2}[-a-zA-Zàâäéèêëïîôöùûüç]+)+$/;
-const errorEmptyFields = "Merci de renseigner ce champ";
-const errorInputFiels = "Ce champs contient une erreur";
+const errorEmptyField = "Merci de renseigner ce champ";
+const errorInputField = "Ce champ contient une erreur";
