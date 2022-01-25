@@ -137,13 +137,13 @@ function getItemToDelete(item) {
   updateTotal(cart);
 }
 
-// SUPPRIME L'ARTICLE DU LOCALSTORAE
+// SUPPRIME L'ARTICLE DU LOCALSTORAGE
 function deleteDataFromCache(item) {
   const key = `${item.idProduct}/${item.color}`;
   localStorage.removeItem(key);
 }
 
-// SUPPRIME L'ARTICLE SU PANIER
+// SUPPRIME L'ARTICLE DU PANIER
 function deleteArticleFromCart(item) {
   const articleToDelete = document.querySelector(
     `article[data-id="${item.idProduct}"][data-color="${item.color}"]`
@@ -195,7 +195,7 @@ function mapPriceToString(str) {
   });
 }
 
-// FORMULAIRE
+// ECOUTE LE BOUTON COMMANDER ET DECLENCHE LA VEFIFICATION AVANT ENVOI AU BACKUP
 const orderButton = document.querySelector("#order");
 orderButton.addEventListener("click", (e) => submitForm(e));
 

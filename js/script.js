@@ -7,11 +7,11 @@ fetch("http://localhost:3000/api/products")
 //  construit un objet à partir des éléments récupérés dans le tableau
 function displayProducts(data) {
   for (let element of data) {
-    makeArticles(element);
+    makeArticle(element);
   }
 }
 // affiche l'objet sur la page d'accueil index.html
-function makeArticles(sofa) {
+function makeArticle(sofa) {
   const article = `
     <a href="./product.html?id=${sofa._id}">
         <article>
@@ -20,7 +20,12 @@ function makeArticles(sofa) {
         <p class="productDescription">${sofa.description}</p>
         </article>
     </a>`;
-  document.getElementById("items").innerHTML += article;
+  displayArticle(article);
+}
+
+function displayArticle(article) {
+  const articleContent = document.getElementById("items");
+  articleContent.innerHTML += article;
 }
 // altTxt: "Photo d'un canapé bleu, deux places"
 // colors: (3) ['Blue', 'White', 'Black']
