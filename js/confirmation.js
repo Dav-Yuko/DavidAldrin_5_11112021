@@ -1,6 +1,5 @@
 const orderId = getOrderId();
 displayOrderId(orderId);
-console.log(orderId);
 
 // RECUPERE L'ID DE LA PAGE CART.JS
 function getOrderId() {
