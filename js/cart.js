@@ -1,18 +1,10 @@
-// altImage: "Photo d'un canapé bleu, deux places"
-// color: "Blue"
-// idProduct: "107fb5b75607497b96722bda5b504926"
-// imageUrl: "http://localhost:3000/images/kanap01.jpeg"
-// name: "Kanap Sinopé"
-// price: 1849
-// quantity: 1
-
 const cart = [];
 getCartFromCache();
 // cart.forEach((item) => displayItem(item));
 
 // RECUPERE LES OBJETS DU DATA STORAGE VIA UNE BOUCLE ET APPELLE LA FONCTION POUR LES AFFICHER
 function getCartFromCache() {
-  for (let i = 0; i < localStorage.length; ++i) {
+  for (let i = 0; i < localStorage.length; i++) {
     const item = localStorage.getItem(localStorage.key(i));
     const itemParse = JSON.parse(item);
     cart.push(itemParse);
@@ -75,7 +67,7 @@ function setItemDescription(item) {
   return itemDescription;
 }
 
-// INTEGRE LA DIV SETTING QUANTITE ET SUPPRIME DEL'ITEM
+// INTEGRE LA DIV SETTING QUANTITE ET SUPPRIMER DE L'ITEM
 function setItemSettings(item) {
   const itemSetting = document.createElement("div");
   itemSetting.classList.add("cart__item__content__settings");
@@ -115,21 +107,21 @@ function setItemDelete(item) {
   const divItemDelete = document.createElement("div");
   divItemDelete.classList.add("cart__item__content__settings__delete");
   const p = document.createElement("p");
-  p.classList.add("getItemToDelete");
+  p.classList.add("deleteItem");
   p.textContent = "Supprimer";
   divItemDelete.appendChild(p);
 
   //ECOUTE ACTION SUR SUR DIV SUPPRIMER
   divItemDelete.addEventListener("click", () => {
-    getItemToDelete(item);
+    deleteItem(item);
   });
   return divItemDelete;
 }
-
 // IDENTIFIE L'ITEM A SUPPRIMER
-function getItemToDelete(item) {
+function deleteItem(item) {
   const itemToDelete = cart.findIndex(
-    (product) => product.id === item.idProduct && product.color === item.color
+    (product) =>
+      product.idProduct === item.idProduct && product.color === item.color
   );
   cart.splice(itemToDelete, 1);
   deleteDataFromCache(item);
@@ -155,6 +147,7 @@ function deleteArticleFromCart(item) {
 function displayArticle(article) {
   document.querySelector("#cart__items").appendChild(article);
 }
+
 updateTotal(cart);
 
 function updateTotal(cart) {
@@ -180,7 +173,7 @@ function updateQuantity(item, quantity) {
 function updateTotalPrice(cart) {
   let totalPrice = 0;
   cart.forEach((item) => {
-    totalPriceByArticle = item.price * item.quantity;
+    const totalPriceByArticle = item.price * item.quantity;
     totalPrice += totalPriceByArticle;
   });
   document.querySelector("#totalPrice").textContent =
@@ -309,7 +302,6 @@ function postOrder() {
     .then((data) => {
       const orderId = data.orderId;
       window.location.href = "/html/confirmation.html?orderId=" + orderId;
-      return console.log(orderId);
     })
     .catch((err) => console.log(err));
 }
